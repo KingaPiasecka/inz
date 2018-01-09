@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="2"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/white"
+    >
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:context="com.agh.wfiis.piase.inz.ui.activities.MainActivity" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalscrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="none"
+            android:gravity="center"
+            android:fillViewport="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/startPause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:textColor="@color/select_button_color"
+                    android:background="@drawable/select_button"/>
+
+                <Button
+                    android:id="@+id/stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stop"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:textColor="@color/select_button_color"
+                    android:background="@drawable/select_button"/>
+
+                <Button
+                    android:id="@+id/pm10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pm10"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:textColor="@color/select_button_color"
+                    android:background="@drawable/select_button"/>
+
+                <Button
+                    android:id="@+id/pm25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pm25"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:textColor="@color/select_button_color"
+                    android:background="@drawable/select_button"/>
+
+<!--                <Button
+                    android:id="@+id/pm1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pm1"/>-->
+
+                <Button
+                    android:id="@+id/pickerDateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/picker"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:textColor="@color/select_button_color"
+                    android:background="@drawable/select_button"/>
+
+                <Button
+                    android:id="@+id/optionsMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OPTIONS"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:textColor="@color/select_button_color"
+                    android:background="@drawable/select_button"/>
+<!--                <Spinner
+                    android:id="@+id/deviceId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />-->
+
+
+            </LinearLayout>
+
+
+        </HorizontalScrollView >
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temperature"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/select_button_color"
+            android:background="@drawable/select_button"/>
+
+        <Button
+            android:id="@+id/humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/humidity"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/select_button_color"
+            android:background="@drawable/select_button"/>
+
+        <Button
+            android:id="@+id/pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pressure"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/select_button_color"
+            android:background="@drawable/select_button"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
