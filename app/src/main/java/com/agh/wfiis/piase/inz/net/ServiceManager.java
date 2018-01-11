@@ -1,4 +1,4 @@
-package com.agh.wfiis.piase.inz.utils.net;
+package com.agh.wfiis.piase.inz.net;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

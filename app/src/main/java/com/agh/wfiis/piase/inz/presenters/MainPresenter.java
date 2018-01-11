@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.agh.wfiis.piase.inz.models.DataManager;
+import com.agh.wfiis.piase.inz.models.DataManagerImp;
 import com.agh.wfiis.piase.inz.models.pojo.Dust;
 import com.agh.wfiis.piase.inz.models.remote.APICallBack;
 import com.agh.wfiis.piase.inz.presenters.chart.ChartInterface;
@@ -51,7 +51,7 @@ public class MainPresenter {
     public MapInterface mapInterface;
 
     private APICallBack apiCallBack;
-    public DataManager dataManager;
+    public DataManagerImp dataManager;
 
 
 
@@ -66,7 +66,7 @@ public class MainPresenter {
         apiCallBack = new APICallBack(context);
         mapInterface = new PM10MapInterface(context);
         chartInterface = new TempChartInterface(context, chart);
-        dataManager = new DataManager(this, context, apiCallBack);
+        dataManager = new DataManagerImp(this, context, apiCallBack);
 
     }
 
@@ -243,13 +243,11 @@ public class MainPresenter {
         END_OF_MEASUREMENTS = endOfMeasurements;
     }
 
-    public void checkIfCorrectMeasurement(List<Dust> resultList) {
+    private void checkIfCorrectMeasurement(List<Dust> resultList) {
         for (Dust dust : resultList) {
             if (dust.getLatitude() == 0 && dust.getLongitude() == 0) {
                 resultList.remove(dust);
             }
         }
     }
-
-
 }

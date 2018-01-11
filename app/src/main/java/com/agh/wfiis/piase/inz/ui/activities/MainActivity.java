@@ -17,7 +17,8 @@ import com.agh.wfiis.piase.inz.presenters.DataTimePresenter;
 import com.agh.wfiis.piase.inz.presenters.MainPresenter;
 import com.agh.wfiis.piase.inz.ui.fragments.DatePickerFragment;
 import com.agh.wfiis.piase.inz.ui.fragments.TimePickerFragment;
-import com.agh.wfiis.piase.inz.utils.net.NetworkChangeReceiver;
+import com.agh.wfiis.piase.inz.net.NetworkChangeReceiver;
+import com.agh.wfiis.piase.inz.utils.ToastMessage;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -50,9 +51,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        ToastMessage.setContext(getApplicationContext());
+
         SharedPreferences sharedPref = getBaseContext().getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        //SharedPreferences.Editor editor = sharedPref.edit();
 
         networkChangeReceiver  = new NetworkChangeReceiver(getApplicationContext());
         registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
