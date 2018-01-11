@@ -1,5 +1,11 @@
 package com.agh.wfiis.piase.inz.restapi;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.agh.wfiis.piase.inz.restapi.auth.AuthInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -12,22 +18,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class APIClient {
-    private  static Retrofit retrofit;
+    private static Retrofit retrofit;
 
-    public  static Retrofit getRetrofit() {
-        if (retrofit == null) {
+    public static Retrofit getRetrofit(Context context) {
 
-            Gson gson = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd' 'HH:mm:ss")
-                    .setLenient()
-                    .create();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-            retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.0.104")
-                    .client(new OkHttpClient())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-        }
-        return  retrofit;
+        String username = preferences.getString("username", "");
+        String password = preferences.getString("password", "");
+
+        String ip = preferences.getString("ip", "");
+        StringBuilder url = new StringBuilder();
+        url.append("http://").append(ip);
+
+        AuthInterceptor authInterceptor = new AuthInterceptor(username, password);
+        Log.i("u" + username + "" + password, "" + url.toString());
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd' 'HH:mm:ss")
+                .setLenient()
+                .create();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(url.toString())
+                .client(new OkHttpClient.Builder().addInterceptor(authInterceptor).build())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        return retrofit;
     }
+
 }

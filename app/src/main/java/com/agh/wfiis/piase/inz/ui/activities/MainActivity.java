@@ -1,7 +1,9 @@
 package com.agh.wfiis.piase.inz.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -34,6 +36,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private Button startPauseButton;
     private Button stopButton;
     private DialogFragment newFragment;
+    private NetworkChangeReceiver networkChangeReceiver;
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
 
 
     @Override
@@ -46,8 +50,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
-        registerReceiver(new NetworkChangeReceiver(getApplicationContext()), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        networkChangeReceiver  = new NetworkChangeReceiver(getApplicationContext());
+        registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         chart =  findViewById(R.id.chart);
         chart.getLegend().setEnabled(false);
@@ -104,6 +112,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     startPauseButton.setTag(2);
                     //spinner.setEnabled(false);
                     pickerDateTime.setEnabled(false);
+                    optionsMenu.setEnabled(false);
 
                     //clear data
                     mainPresenter.deleteData();
@@ -144,6 +153,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 stopButton.setEnabled(false);
                 //spinner.setEnabled(true);
                 pickerDateTime.setEnabled(true);
+                optionsMenu.setEnabled(true);
                 mainPresenter.sendCancelAsyncRequest();
                 mainPresenter.dataManager.deleteDataListCache();
                 mainPresenter.setPAUSE(false);
@@ -286,12 +296,25 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onResume() {
-        registerReceiver(new NetworkChangeReceiver(getApplicationContext()), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+            networkChangeReceiver = null;
+        }
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+            networkChangeReceiver = null;
+        }
+        super.onDestroy();
     }
 }

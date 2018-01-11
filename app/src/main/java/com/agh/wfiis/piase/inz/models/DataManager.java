@@ -51,6 +51,9 @@ public class DataManager {
                             //PerformBackgroundTask performBackgroundTask = new PerformBackgroundTask(apiCallBack);
                             // PerformBackgroundTask this class is the class that extends AsynchTask
 
+                            if (apiCallBack.isExceptionStop()) {
+                                cancelAsyncRequest();
+                            }
                             if (DataTimePresenter.isDateTimeChange()) {
                                 apiCallBack.start(new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()),  MainPresenter.getDeviceId());
                                 DataTimePresenter.setDateTimeChange(false);

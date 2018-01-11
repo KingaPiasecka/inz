@@ -63,7 +63,7 @@ public class MainPresenter {
     }
 
     private void init() {
-        apiCallBack = new APICallBack();
+        apiCallBack = new APICallBack(context);
         mapInterface = new PM10MapInterface(context);
         chartInterface = new TempChartInterface(context, chart);
         dataManager = new DataManager(this, context, apiCallBack);

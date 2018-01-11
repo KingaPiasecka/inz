@@ -1,10 +1,15 @@
 package com.agh.wfiis.piase.inz.models.remote;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
+import com.agh.wfiis.piase.inz.models.DataManager;
 import com.agh.wfiis.piase.inz.models.pojo.Dust;
 import com.agh.wfiis.piase.inz.restapi.APIClient;
 
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +17,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,18 +33,21 @@ public class APICallBack implements Callback<List<Dust>> {
     private boolean unPause;
     private DateFormat dateFormat;
     private Dust latest;
+    private Context context;
+    private boolean exceptionStop = false;
 
 
-    public APICallBack() {
+    public APICallBack(Context context) {
         this.resultList = new ArrayList<>();
         this.unPause = false;
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+        this.context = context;
     }
 
     public void start(Date startingDateTime, String devId) {
 
-        APIInterface apiInterface = APIClient.getRetrofit().create(APIInterface.class);
-
+        APIInterface apiInterface = APIClient.getRetrofit(context).create(APIInterface.class);
+        exceptionStop = false;
         if (resultList.isEmpty() || unPause) {
             call = apiInterface.getDusts(dateFormat.format(startingDateTime), devId);
             Log.i("Start from:" + dateFormat.format(startingDateTime), "devId:" + devId);
@@ -66,14 +75,26 @@ public class APICallBack implements Callback<List<Dust>> {
     @Override
     public void onResponse(Call<List<Dust>> call, Response<List<Dust>> response) {
         resultList = response.body();
-        latest = getTheNewestOne();
-        Log.i("onResponse: ", "" + resultList.get(0).toString());
+        if (!resultList.isEmpty()) {
+            latest = getTheNewestOne();
+            Log.i("onResponse: ", "" + resultList.get(0).toString());
+        }
+        Headers headers = response.headers();
+        Log.i("headers: ", "" + headers.toString());
+
     }
 
     @Override
     public void onFailure(Call<List<Dust>> call, Throwable throwable) {
         resultList = new ArrayList<>();
-        Log.i("onFailure", "" + throwable);
+        Log.i("onFailure", "" + throwable.getMessage());
+
+        if (throwable instanceof UnknownHostException) {
+            exceptionStop = true;
+            Toast toast = Toast.makeText(this.context, throwable.getMessage(), Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.show();
+        }
     }
 
     public List<Dust> getResultList() {
@@ -87,5 +108,9 @@ public class APICallBack implements Callback<List<Dust>> {
 
     public void setUnPause(boolean unPause) {
         this.unPause = unPause;
+    }
+
+    public boolean isExceptionStop() {
+        return exceptionStop;
     }
 }

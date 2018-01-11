@@ -44,13 +44,22 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.SettingsActivity"
-            android:parentActivityName=".ui.activities.MainActivity"/>
+            android:fitsSystemWindows="false"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
         
         <receiver android:name=".utils.net.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+
+        <activity android:name=".ui.activities.UserPreferencesActivity"
+            android:fitsSystemWindows="false"
+            android:parentActivityName=".ui.activities.SettingsActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
     </application>
 
 </manifest>

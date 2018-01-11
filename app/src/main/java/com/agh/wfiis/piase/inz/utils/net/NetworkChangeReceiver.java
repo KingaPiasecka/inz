@@ -15,6 +15,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private Context context;
 
+    public NetworkChangeReceiver(){}
+
     public NetworkChangeReceiver(Context context) {
         this.context = context;
     }

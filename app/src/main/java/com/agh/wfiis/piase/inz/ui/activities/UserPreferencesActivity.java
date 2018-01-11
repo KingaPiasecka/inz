@@ -3,11 +3,10 @@ package com.agh.wfiis.piase.inz.ui.activities;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.agh.wfiis.piase.inz.R;
@@ -15,27 +14,24 @@ import com.agh.wfiis.piase.inz.R;
 import java.util.Map;
 
 /**
- * Created by piase on 2018-01-07.
+ * Created by piase on 2018-01-10.
  */
 
-public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class UserPreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
-    private PreferencesFragment preferencesFragment;
+    private UserPreferencesActivity.UserPreferencesFragment userPreferencesFragment;
     private SharedPreferences sharedPreferences;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Preferences");
-        preferencesFragment = new PreferencesFragment();
-        getFragmentManager().beginTransaction().replace(android.R.id.content, preferencesFragment).commit();
+        userPreferencesFragment = new UserPreferencesFragment();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, userPreferencesFragment).commit();
         getFragmentManager().executePendingTransactions();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-       // updatePreferences();
+        //updatePreferences();
     }
 
     public void updatePreferences() {
@@ -44,10 +40,10 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
             Object type = sharedPreferencesAll.get(key);
             if (type instanceof String) {
                 String keyValue = sharedPreferences.getString(key, "");
-                Preference preference = preferencesFragment.findPreference(keyValue);
+                Preference preference =  userPreferencesFragment.findPreference(keyValue);
                 if (preference != null) {
                     Log.i("key:" + key, "val:" + keyValue);
-                    //preference.setSummary(keyValue);
+                    preference.setSummary(keyValue);
                 }
             }
 
@@ -57,21 +53,12 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         String keyValue = sharedPreferences.getString(key, "");
-        Preference preference = preferencesFragment.findPreference(keyValue);
+        Preference preference = userPreferencesFragment.findPreference(keyValue);
         Log.i("key:" + key, "val:" + keyValue);
         if (preference != null) {
-            //preference.setSummary(keyValue);
+           // preference.setSummary(keyValue);
         }
-    }
 
-
-    public static class PreferencesFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
-
-        }
     }
 
     @Override
@@ -85,4 +72,15 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         super.onPause();
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
+
+    public static class UserPreferencesFragment extends PreferenceFragment{
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.server_preferences);
+        }
+
+    }
+
 }

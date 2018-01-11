@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory android:title="Connection configuration">
+
+        <EditTextPreference android:title="Server IP for connectivity"
+            android:summary="Tap to change IP"
+            android:inputType="textUri"
+            android:key="ip"
+            />
+
+        <PreferenceScreen
+            android:key="user"
+            android:summary="Tap to change username/password"
+            android:title="User">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.agh.wfiis.piase.inz.ui.activities.UserPreferencesActivity"
+                android:targetPackage="com.agh.wfiis.piase.inz" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
 
     <PreferenceCategory
-        android:textSize="40dp"
         android:title="Measurement options">
 
         <ListPreference
@@ -23,15 +43,14 @@
         android:title="PoDust">
 
         <ListPreference
+            android:dialogMessage="AGH Faculty of Physics and Applied Computer Science. All rights reserved."
             android:entries="@array/about"
             android:entryValues="@array/aboutV"
-            android:dialogMessage="AGH Faculty of Physics and Applied Computer Science. All rights reserved."
             android:key="about"
             android:negativeButtonText="@null"
             android:positiveButtonText="OK"
             android:title="About" />
 
     </PreferenceCategory>
-
 
 </PreferenceScreen>
