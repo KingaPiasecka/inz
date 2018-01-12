@@ -1,9 +1,8 @@
-package com.agh.wfiis.piase.inz.utils.net;
+package com.agh.wfiis.piase.inz.net;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 

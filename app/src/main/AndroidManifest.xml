@@ -48,7 +48,7 @@
             android:parentActivityName=".ui.activities.MainActivity"
             android:windowSoftInputMode="adjustResize"/>
         
-        <receiver android:name=".utils.net.NetworkChangeReceiver">
+        <receiver android:name=".net.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

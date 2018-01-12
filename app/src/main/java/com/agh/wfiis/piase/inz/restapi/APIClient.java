@@ -19,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIClient {
     private static Retrofit retrofit;
+    private StringBuilder url;
 
     public static Retrofit getRetrofit(Context context) {
 
@@ -32,7 +33,6 @@ public class APIClient {
         url.append("http://").append(ip);
 
         AuthInterceptor authInterceptor = new AuthInterceptor(username, password);
-        Log.i("u" + username + "" + password, "" + url.toString());
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd' 'HH:mm:ss")
                 .setLenient()

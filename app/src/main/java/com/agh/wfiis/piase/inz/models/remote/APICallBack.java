@@ -1,13 +1,13 @@
 package com.agh.wfiis.piase.inz.models.remote;
 
 import android.content.Context;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
-import com.agh.wfiis.piase.inz.models.DataManager;
+import com.agh.wfiis.piase.inz.DataManager;
 import com.agh.wfiis.piase.inz.models.pojo.Dust;
 import com.agh.wfiis.piase.inz.restapi.APIClient;
+import com.agh.wfiis.piase.inz.utils.ToastMessage;
 
 import java.net.UnknownHostException;
 import java.text.DateFormat;
@@ -35,6 +35,7 @@ public class APICallBack implements Callback<List<Dust>> {
     private Dust latest;
     private Context context;
     private boolean exceptionStop = false;
+    private DataManager dataManager;
 
 
     public APICallBack(Context context) {
@@ -44,15 +45,15 @@ public class APICallBack implements Callback<List<Dust>> {
         this.context = context;
     }
 
-    public void start(Date startingDateTime, String devId) {
-
+    public void start(Date startingDateTime, String devId, DataManager dataManager) {
+        this.dataManager = dataManager;
         APIInterface apiInterface = APIClient.getRetrofit(context).create(APIInterface.class);
         exceptionStop = false;
         if (resultList.isEmpty() || unPause) {
             call = apiInterface.getDusts(dateFormat.format(startingDateTime), devId);
             Log.i("Start from:" + dateFormat.format(startingDateTime), "devId:" + devId);
             unPause = false;
-        } else  if (!resultList.isEmpty()){
+        } else if (!resultList.isEmpty()) {
             Date dateTime = latest.getDateTime();
             dateTime.setTime(dateTime.getTime() + 1000);
             String date = dateFormat.format(dateTime);
@@ -74,14 +75,23 @@ public class APICallBack implements Callback<List<Dust>> {
 
     @Override
     public void onResponse(Call<List<Dust>> call, Response<List<Dust>> response) {
-        resultList = response.body();
-        if (!resultList.isEmpty()) {
-            latest = getTheNewestOne();
-            Log.i("onResponse: ", "" + resultList.get(0).toString());
-        }
-        Headers headers = response.headers();
-        Log.i("headers: ", "" + headers.toString());
+        if (response.isSuccessful()) {
+            resultList = response.body();
+            if (!resultList.isEmpty()) {
+                latest = getTheNewestOne();
+                Headers headers = response.headers();
+                Log.i("headers: ", "" + headers.toString());
+            }
+        } else {
 
+            if (response.code() == 401) {
+                dataManager.onSuccess(false, "User not authenticated");
+                //throw new UserNotAuthenticatedException("User not authenticated");
+            }
+
+            Log.e("statusBody: ", "" +String.valueOf(response.code()));
+            Log.e("errorBody: ", "" + response.errorBody().toString());
+        }
     }
 
     @Override
@@ -91,9 +101,7 @@ public class APICallBack implements Callback<List<Dust>> {
 
         if (throwable instanceof UnknownHostException) {
             exceptionStop = true;
-            Toast toast = Toast.makeText(this.context, throwable.getMessage(), Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.show();
+            ToastMessage.showToastMessage(throwable.getMessage());
         }
     }
 

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
+import com.agh.wfiis.piase.inz.DataManager;
 import com.agh.wfiis.piase.inz.models.db.DatabaseAdapter;
 import com.agh.wfiis.piase.inz.models.pojo.Dust;
 import com.agh.wfiis.piase.inz.models.remote.APICallBack;
 import com.agh.wfiis.piase.inz.presenters.DataTimePresenter;
 import com.agh.wfiis.piase.inz.presenters.MainPresenter;
+import com.agh.wfiis.piase.inz.utils.ToastMessage;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.TimerTask;
  * Created by piase on 2018-01-05.
  */
 
-public class DataManager {
+public class DataManagerImp implements DataManager{
 
     private MainPresenter mainPresenter;
     private TimerTask doAsynchronousTask;
@@ -27,7 +29,7 @@ public class DataManager {
     private DatabaseAdapter databaseAdapter;
     private Context context;
 
-    public DataManager(MainPresenter mainPresenter,Context context, APICallBack apiCallBack) {
+    public DataManagerImp(MainPresenter mainPresenter, Context context, APICallBack apiCallBack) {
         this.mainPresenter = mainPresenter;
         this.context = context;
         this.apiCallBack = apiCallBack;
@@ -48,17 +50,14 @@ public class DataManager {
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-                            //PerformBackgroundTask performBackgroundTask = new PerformBackgroundTask(apiCallBack);
-                            // PerformBackgroundTask this class is the class that extends AsynchTask
-
                             if (apiCallBack.isExceptionStop()) {
                                 cancelAsyncRequest();
                             }
                             if (DataTimePresenter.isDateTimeChange()) {
-                                apiCallBack.start(new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()),  MainPresenter.getDeviceId());
+                                apiCallBack.start(new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()), MainPresenter.getDeviceId(), DataManagerImp.this);
                                 DataTimePresenter.setDateTimeChange(false);
                             } else if (!MainPresenter.isPAUSE()) {
-                                apiCallBack.start(new Date(), MainPresenter.getDeviceId());
+                                apiCallBack.start(new Date(), MainPresenter.getDeviceId(), DataManagerImp.this);
                             }
 
                             if (!MainPresenter.isPAUSE()) {
@@ -67,9 +66,10 @@ public class DataManager {
                             }
                             mainPresenter.updateUI();
 
-
+                        } catch (IllegalArgumentException e) {
+                            ToastMessage.showToastMessage(e.getMessage());
+                            cancelAsyncRequest();
                         } catch (Exception e) {
-                            // TODO Auto-generated catch block
                             Log.e("TimerTask:", e.getMessage());
                         }
                     }
@@ -80,9 +80,8 @@ public class DataManager {
     }
 
     public void cancelAsyncRequest() {
-        Log.i("cancelAsync:", "" + (doAsynchronousTask == null));
         if (doAsynchronousTask != null) {
-            Log.i("cancelAsyncRequest", "");
+            Log.i("invoke", "cancelAsyncRequest");
             doAsynchronousTask.cancel();
         }
     }
@@ -99,4 +98,16 @@ public class DataManager {
         apiCallBack.clearDataCache();
     }
 
+    @Override
+    public void onSuccess(boolean result, String message) {
+        if (!result) {
+            onException(message);
+        }
+    }
+
+    @Override
+    public void onException(String message) {
+        ToastMessage.showToastMessage(message);
+        cancelAsyncRequest();
+    }
 }

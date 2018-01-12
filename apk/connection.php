@@ -10,9 +10,10 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		// The request is using the POST method
 		$con = mysqli_connect($_SERVER['HTTP_HOST'],$user,$password,"meteo");
-		if (mysqli_connect_errno())
+		if (mysqli_connect_errno() != 0)
 		{
-			echo json_encode($array);
+			$code = mysqli_connect_errno();
+			echo json_encode(http_response_code($code));
 		} else {
 			$datetime = $_POST["datetime"];
 			$dev_id = $_POST["dev_id"];
