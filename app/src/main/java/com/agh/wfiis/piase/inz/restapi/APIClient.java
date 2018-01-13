@@ -9,6 +9,8 @@ import com.agh.wfiis.piase.inz.restapi.auth.AuthInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -40,7 +42,8 @@ public class APIClient {
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(url.toString())
-                .client(new OkHttpClient.Builder().addInterceptor(authInterceptor).build())
+                .client(new OkHttpClient.Builder().addInterceptor(authInterceptor).readTimeout(100, TimeUnit.SECONDS)
+                        .connectTimeout(100, TimeUnit.SECONDS).build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

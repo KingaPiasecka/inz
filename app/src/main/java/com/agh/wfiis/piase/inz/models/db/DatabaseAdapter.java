@@ -23,7 +23,7 @@ public class DatabaseAdapter {
     private DatabaseHelper databaseHelper;
 
     public DatabaseAdapter(Context context) {
-        this.databaseHelper = new DatabaseHelper(context);
+        this.databaseHelper = DatabaseHelper.getInstance(context);
     }
 
     public void open() {
@@ -51,7 +51,7 @@ public class DatabaseAdapter {
                 ContentValues contentValues = databaseHelper.parseToContentValues(dust);
                 long insertId = sqLiteDatabase.insert(DatabaseHelper.TABLE_DUST, null, contentValues);
             } catch (Exception e) {
-                Log.e("DatabaseAdapter.class:", "" + e.getMessage());
+                e.printStackTrace();
             }
         }
     }

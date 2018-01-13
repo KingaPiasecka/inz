@@ -5,6 +5,6 @@ package com.agh.wfiis.piase.inz;
  */
 
 public interface DataManager {
-    public void onSuccess(boolean result, String message);
-    public void onException(String message);
+    void onSuccess(boolean result, String message);
+    void onException(String message);
 }

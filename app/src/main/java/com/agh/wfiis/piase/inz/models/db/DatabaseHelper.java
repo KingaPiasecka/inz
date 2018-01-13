@@ -54,7 +54,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_DROP = "drop table if exists " + TABLE_DUST;
 
-    public DatabaseHelper(Context context) {
+    private static DatabaseHelper dbInstance = null;
+
+    public static DatabaseHelper getInstance(Context context) {
+        if (dbInstance == null) {
+            dbInstance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return dbInstance;
+    }
+
+
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
     }
