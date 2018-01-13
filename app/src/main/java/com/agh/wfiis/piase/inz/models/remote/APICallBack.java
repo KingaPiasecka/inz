@@ -77,38 +77,27 @@ public class APICallBack implements Callback<List<Dust>> {
     public void onResponse(Call<List<Dust>> call, Response<List<Dust>> response) {
         if (response.isSuccessful()) {
             resultList = response.body();
-            Log.i("headers: ", "" + response.body());
             if (!resultList.isEmpty()) {
                 latest = getTheNewestOne();
                 Headers headers = response.headers();
                 Log.i("headers: ", "" + headers.toString());
             }
         } else {
+
             Log.e("Error Code", String.valueOf(response.code()));
+            if (response.code() == 401) {
+                dataManager.onSuccess(false, "User not authenticated");
+            } else if (response.code() == 500) {
+                dataManager.onSuccess(false, "Internal Server Error");
+            } else {
+                dataManager.onSuccess(false, "HTTP status code:" + response.code());
+            }
             try {
                 Log.e("Error Body", response.errorBody().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        /*} else {
-            Log.i("notSe", "" + response.body());
-            if (response.code() == 401) {
-                dataManager.onSuccess(false, "User not authenticated");
-                //throw new UserNotAuthenticatedException("User not authenticated");
-            } else if (response.code() == 500) {
-                dataManager.onSuccess(false, "Internal Server Error");
-            } else {
-                dataManager.onSuccess(false, "HTTP status code:" + response.code());
-            }
-
-            Log.e("statusBody: ", "" +String.valueOf(response.code()));
-            try {
-                Log.e("errorBody: ", "" + response.errorBody().string());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
     @Override
