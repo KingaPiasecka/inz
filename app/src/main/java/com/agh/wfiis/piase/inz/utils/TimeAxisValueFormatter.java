@@ -39,7 +39,6 @@ public class TimeAxisValueFormatter implements IAxisValueFormatter {
     private String getTime(long timestamp) {
         try {
             date.setTime(timestamp);
-            Log.i("dateFormat:", dateFormat.format(date));
             return dateFormat.format(date);
         } catch (Exception e) {
             Log.i("TimeAxisValueFormatter:", e.getMessage());

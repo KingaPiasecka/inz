@@ -70,7 +70,7 @@ public class DataManagerImp implements DataManager{
                             ToastMessage.showToastMessage(e.getMessage());
                             cancelAsyncRequest();
                         } catch (Exception e) {
-                            Log.e("TimerTask:", e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 });

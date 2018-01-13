@@ -63,7 +63,7 @@ public class MainPresenter {
     }
 
     private void init() {
-        apiCallBack = new APICallBack(context);
+        apiCallBack = new APICallBack(context.getApplicationContext());
         mapInterface = new PM10MapInterface(context);
         chartInterface = new TempChartInterface(context, chart);
         dataManager = new DataManagerImp(this, context, apiCallBack);
@@ -96,7 +96,6 @@ public class MainPresenter {
 
         if (!PAUSE) {
             List<Dust> resultList = apiCallBack.getResultList();
-            checkIfCorrectMeasurement(resultList);
             updateChart(resultList);
             updateMap(resultList);
 
@@ -107,10 +106,12 @@ public class MainPresenter {
     public void updateMap(List<Dust> dustList) {
         if (!dustList.isEmpty()) {
             for (Dust dust : dustList) {
-                Log.i("updateMap:", dust.toString());
-                MarkerOptions measurementMarker = mapInterface.getMeasurementMarker(dust);
-                mMap.addMarker(measurementMarker);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(measurementMarker.getPosition()));
+                if (checkIfCorrectMeasurement(dust)) {
+                    Log.i("updateMap:", dust.toString());
+                    MarkerOptions measurementMarker = mapInterface.getMeasurementMarker(dust);
+                    mMap.addMarker(measurementMarker);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(measurementMarker.getPosition()));
+                }
             }
         }
     }
@@ -131,8 +132,10 @@ public class MainPresenter {
         }
         if (!dusts.isEmpty()) {
             for (Dust dust : dusts) {
-                MarkerOptions measurementMarker = mapInterface.getMeasurementMarker(dust);
-                mMap.addMarker(measurementMarker);
+                if (checkIfCorrectMeasurement(dust)) {
+                    MarkerOptions measurementMarker = mapInterface.getMeasurementMarker(dust);
+                    mMap.addMarker(measurementMarker);
+                }
             }
         }
     }
@@ -243,11 +246,10 @@ public class MainPresenter {
         END_OF_MEASUREMENTS = endOfMeasurements;
     }
 
-    private void checkIfCorrectMeasurement(List<Dust> resultList) {
-        for (Dust dust : resultList) {
-            if (dust.getLatitude() == 0 && dust.getLongitude() == 0) {
-                resultList.remove(dust);
-            }
+    private boolean checkIfCorrectMeasurement(Dust dust) {
+        if (dust.getLatitude() == 0 && dust.getLongitude() == 0) {
+            return false;
         }
+        return true;
     }
 }

@@ -33,11 +33,13 @@
 
         <activity
             android:name=".ui.activities.MainActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_splash">
+            android:label="@string/title_activity_splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -46,7 +48,8 @@
         <activity android:name=".ui.activities.SettingsActivity"
             android:fitsSystemWindows="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
         
         <receiver android:name=".net.NetworkChangeReceiver">
             <intent-filter>
@@ -59,7 +62,8 @@
             android:fitsSystemWindows="false"
             android:parentActivityName=".ui.activities.SettingsActivity"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Light.Dialog"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

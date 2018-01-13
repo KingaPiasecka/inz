@@ -9,6 +9,7 @@ import com.agh.wfiis.piase.inz.models.pojo.Dust;
 import com.agh.wfiis.piase.inz.restapi.APIClient;
 import com.agh.wfiis.piase.inz.utils.ToastMessage;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -50,7 +51,7 @@ public class APICallBack implements Callback<List<Dust>> {
         APIInterface apiInterface = APIClient.getRetrofit(context).create(APIInterface.class);
         exceptionStop = false;
         if (resultList.isEmpty() || unPause) {
-            call = apiInterface.getDusts(dateFormat.format(startingDateTime), devId);
+            call = apiInterface.getDusts(dateFormat.format(startingDateTime.getTime()), devId);
             Log.i("Start from:" + dateFormat.format(startingDateTime), "devId:" + devId);
             unPause = false;
         } else if (!resultList.isEmpty()) {
@@ -58,18 +59,17 @@ public class APICallBack implements Callback<List<Dust>> {
             dateTime.setTime(dateTime.getTime() + 1000);
             String date = dateFormat.format(dateTime);
             call = apiInterface.getDusts(date, devId);
-            Log.i("get data from:", date);
+            Log.i("Get data from:", date);
         }
         try {
             call.enqueue(this);
         } catch (Exception e) {
-            Log.e("APICallBack.class:", e.getMessage());
+            Log.e("APICallBack.class:", "" + e);
         }
     }
 
     private Dust getTheNewestOne() {
         Collections.sort(resultList);
-        Log.i("newest:", "" + resultList.get(0).toString());
         return resultList.get(resultList.size() - 1);
     }
 
@@ -77,21 +77,38 @@ public class APICallBack implements Callback<List<Dust>> {
     public void onResponse(Call<List<Dust>> call, Response<List<Dust>> response) {
         if (response.isSuccessful()) {
             resultList = response.body();
+            Log.i("headers: ", "" + response.body());
             if (!resultList.isEmpty()) {
                 latest = getTheNewestOne();
                 Headers headers = response.headers();
                 Log.i("headers: ", "" + headers.toString());
             }
         } else {
-
+            Log.e("Error Code", String.valueOf(response.code()));
+            try {
+                Log.e("Error Body", response.errorBody().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        /*} else {
+            Log.i("notSe", "" + response.body());
             if (response.code() == 401) {
                 dataManager.onSuccess(false, "User not authenticated");
                 //throw new UserNotAuthenticatedException("User not authenticated");
+            } else if (response.code() == 500) {
+                dataManager.onSuccess(false, "Internal Server Error");
+            } else {
+                dataManager.onSuccess(false, "HTTP status code:" + response.code());
             }
 
             Log.e("statusBody: ", "" +String.valueOf(response.code()));
-            Log.e("errorBody: ", "" + response.errorBody().toString());
-        }
+            try {
+                Log.e("errorBody: ", "" + response.errorBody().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
     }
 
     @Override
@@ -106,7 +123,6 @@ public class APICallBack implements Callback<List<Dust>> {
     }
 
     public List<Dust> getResultList() {
-        Log.i("APICallBack: result", "" + resultList.size());
         return resultList;
     }
 
