@@ -14,6 +14,7 @@ import com.agh.wfiis.piase.inz.utils.ToastMessage;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,6 +54,7 @@ public class DataManagerImp implements DataManager{
                             if (apiCallBack.isExceptionStop()) {
                                 cancelAsyncRequest();
                             }
+                            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
                             if (DataTimePresenter.isDateTimeChange()) {
                                 apiCallBack.start(new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()), MainPresenter.getDeviceId(), DataManagerImp.this);
                                 DataTimePresenter.setDateTimeChange(false);

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -43,6 +44,7 @@ public class APICallBack implements Callback<List<Dust>> {
         this.resultList = new ArrayList<>();
         this.unPause = false;
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+        dateFormat.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         this.context = context;
     }
 
