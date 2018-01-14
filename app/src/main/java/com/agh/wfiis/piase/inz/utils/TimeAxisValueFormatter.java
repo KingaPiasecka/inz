@@ -11,6 +11,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.SimpleTimeZone;
 
 /**
  * Created by piase on 2017-12-26.
@@ -25,6 +26,7 @@ public class TimeAxisValueFormatter implements IAxisValueFormatter {
     public TimeAxisValueFormatter(long referenceTimestamp) {
         this.referenceTimestamp = referenceTimestamp;
         this.dateFormat = new SimpleDateFormat("HH:mm:ss");
+        dateFormat.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         this.date = new Date();
     }
 
