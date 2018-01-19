@@ -10,7 +10,10 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,11 +65,19 @@ public class PreChartInterface implements ChartInterface{
             dataSetByIndex.setLineWidth(2f);
             dataSetByIndex.setColors(Color.parseColor("#78e04f"));
 
+            List<Entry> tempList = new ArrayList<>();
+
             for (Dust dust : dustList) {
                 long l = dust.getDateTime().getTime() - iAxisValueFormatter.referenceTimestamp;
                 Log.i("updateChart: ", dust.toString());
-                chartData.addEntry(new Entry(l, dust.getpAtm().floatValue()),0);
+                tempList.add(new Entry(l, dust.getpAtm().floatValue()));
                 chart.getDescription().setText("Pressure: " + dust.getpAtm() + " (hPa)");
+            }
+
+            Collections.sort(tempList, new EntryXComparator());
+
+            for (Entry entry : tempList) {
+                chartData.addEntry(entry,0);
             }
 
             chartData.notifyDataChanged();

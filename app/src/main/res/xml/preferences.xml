@@ -43,7 +43,13 @@
         android:title="PoDust">
 
         <ListPreference
-            android:dialogMessage="AGH Faculty of Physics and Applied Computer Science. All rights reserved."
+            android:dialogMessage="MoMeMo (Mobile Measurement Monitor) v.1.0
+Application developed by Kinga Piasecka
+as diploma project.
+Environmental Physics Group
+Faculty of Physics and Applied Computer Science
+AGH University of Science and Technology
+All rights reserved"
             android:entries="@array/about"
             android:entryValues="@array/aboutV"
             android:key="about"
