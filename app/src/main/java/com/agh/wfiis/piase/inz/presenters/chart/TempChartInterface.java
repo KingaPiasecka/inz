@@ -10,7 +10,11 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,7 +38,6 @@ public class TempChartInterface implements ChartInterface {
 
             LineData chartData = chart.getData();
             LineDataSet dataSetByIndex;
-
             if (chartData == null) {
                 chartData = new LineData();
 
@@ -67,13 +70,25 @@ public class TempChartInterface implements ChartInterface {
             dataSetByIndex.setLineWidth(2f);
             dataSetByIndex.setColors(Color.parseColor("#e04f4f"));
 
+            List<Entry> tempList = new ArrayList<>();
+
             for (Dust dust : dustList) {
                 long l = dust.getDateTime().getTime() - iAxisValueFormatter.referenceTimestamp;
                 Log.i("updateChart: ", dust.toString());
-                chartData.addEntry(new Entry(l, dust.getTemperature().floatValue()),0);
+                tempList.add(new Entry(l, dust.getTemperature().floatValue()));
                 chart.getDescription().setText("Temperature: " + dust.getTemperature() + " (C)");
 
             }
+
+            Collections.sort(tempList, new EntryXComparator());
+
+            for (Entry entry : tempList) {
+                //dataSetByIndex.addEntry(entry);
+                //dataSetByIndex.notifyDataSetChanged();
+                chartData.addEntry(entry, 0);
+                // chartData.notifyDataChanged();
+            }
+
 
             chartData.notifyDataChanged();
             chart.notifyDataSetChanged();

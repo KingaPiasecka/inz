@@ -10,7 +10,10 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,16 +65,27 @@ public class HumChartInterface implements ChartInterface {
             dataSetByIndex.setLineWidth(2f);
             dataSetByIndex.setColors(Color.parseColor("#3c90c1"));
 
+            List<Entry> tempList = new ArrayList<>();
+
             for (Dust dust : dustList) {
                 long l = dust.getDateTime().getTime() - iAxisValueFormatter.referenceTimestamp;
                 Log.i("updateChart: ", dust.toString());
-                chartData.addEntry(new Entry(l, dust.getrHum().floatValue()),0);
+                tempList.add(new Entry(l, dust.getrHum().floatValue()));
                 chart.getDescription().setText("Humidity: " + dust.getrHum() + " (%)");
             }
 
-            chartData.notifyDataChanged();
+            Collections.sort(tempList, new EntryXComparator());
+
+            for (Entry entry : tempList) {
+                chartData.addEntry(entry,0);
+                chartData.notifyDataChanged();
+                chart.notifyDataSetChanged();
+                chart.invalidate();
+            }
+
+/*            chartData.notifyDataChanged();
             chart.notifyDataSetChanged();
-            chart.invalidate();
+            chart.invalidate();*/
 
         }
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PoDust</string>
+    <string name="app_name">MoMeMo</string>
     <string name="title_activity_maps">Map</string>
 
     <string name="start">START</string>
@@ -22,7 +22,7 @@
     <string name="humidity">HUMIDITY</string>
     <string name="pressure">PRESSURE</string>
 
-    <string name="title_activity_splash">PoDustApp</string>
+    <string name="title_activity_splash">MoMeMoApp</string>
 
     <string-array name="deviceId">
         <item>11</item>

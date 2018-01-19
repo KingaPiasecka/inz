@@ -52,7 +52,8 @@
             android:fitsSystemWindows="false"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+           />
 
         <receiver android:name=".net.NetworkChangeReceiver">
             <intent-filter>

@@ -25,8 +25,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by piase on 2018-01-04.
@@ -96,6 +98,7 @@ public class MainPresenter {
 
         if (!PAUSE) {
             List<Dust> resultList = apiCallBack.getResultList();
+            Collections.sort(resultList);
             updateChart(resultList);
             updateMap(resultList);
 
@@ -143,23 +146,35 @@ public class MainPresenter {
 
     public void updateChart(List<Dust> dustList) {
         if (!dustList.isEmpty()) {
+/*            List<Dust> dusts =  dataManager.getAllData();
+            LineData chartData = chart.getData();
+
+            if (chartData != null) {
+                List<ILineDataSet> dataSets = chartData.getDataSets();
+
+                for (ILineDataSet set : dataSets) {
+                    chartData.removeDataSet(set);
+                }
+            }*/
             chartInterface.updateChart(dustList);
         }
     }
 
     private void setChartPreferences() {
-
         if (DataTimePresenter.isDateTimeChange()) {
-            iAxisValueFormatter = new TimeAxisValueFormatter(new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()).getTime());
-
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+            long time = new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()).getTime();
+            iAxisValueFormatter = new TimeAxisValueFormatter(time);
         } else {
-            iAxisValueFormatter = new TimeAxisValueFormatter(new Date().getTime());
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+            long time = new Date().getTime();
+            iAxisValueFormatter = new TimeAxisValueFormatter(time);
 
         }
         XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(iAxisValueFormatter);
-        xAxis.setGranularityEnabled(true);
-        xAxis.setGranularity(1000f);
+        //xAxis.setGranularityEnabled(true);
+        //xAxis.setGranularity(1000f);
         chartInterface.setTimeAxisValueFormatter(iAxisValueFormatter);
         chart.getDescription().setTextSize(12f);
 
