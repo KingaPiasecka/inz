@@ -43,7 +43,7 @@ public class APICallBack implements Callback<List<Dust>> {
     public APICallBack(Context context) {
         this.resultList = new ArrayList<>();
         this.unPause = false;
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSS");
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         dateFormat.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         this.context = context;
     }
