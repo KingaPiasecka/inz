@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -38,6 +39,7 @@ public class APICallBack implements Callback<List<Dust>> {
     private Context context;
     private boolean exceptionStop = false;
     private DataManager dataManager;
+    private Date startingDate;
 
 
     public APICallBack(Context context) {
@@ -46,23 +48,36 @@ public class APICallBack implements Callback<List<Dust>> {
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         dateFormat.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         this.context = context;
+        this.startingDate = null;
     }
 
     public void start(Date startingDateTime, String devId, DataManager dataManager) {
+
+        if (this.startingDate == null) {
+            this.startingDate = startingDateTime;
+        }
+
         this.dataManager = dataManager;
         APIInterface apiInterface = APIClient.getRetrofit(context).create(APIInterface.class);
         exceptionStop = false;
-        if (resultList.isEmpty() || unPause) {
-            call = apiInterface.getDusts(dateFormat.format(startingDateTime.getTime()), devId);
-            Log.i("Start from:" + dateFormat.format(startingDateTime), "devId:" + devId);
+
+        if (unPause) {
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+            this.startingDate = new Date();
             unPause = false;
-        } else if (!resultList.isEmpty()) {
+        }
+
+//        if (resultList.isEmpty()) {
+            call = apiInterface.getDusts(dateFormat.format(startingDate.getTime()+1000), devId);
+            Log.i("Start from:" + dateFormat.format(startingDate), "devId:" + devId);
+
+       /* } else if (!resultList.isEmpty()) {
             Date dateTime = latest.getDateTime();
             dateTime.setTime(dateTime.getTime() + 1000);
             String date = dateFormat.format(dateTime);
             call = apiInterface.getDusts(date, devId);
             Log.i("Get data from:", date);
-        }
+        }*/
         try {
             call.enqueue(this);
         } catch (Exception e) {
@@ -81,6 +96,7 @@ public class APICallBack implements Callback<List<Dust>> {
             resultList = response.body();
             if (!resultList.isEmpty()) {
                 latest = getTheNewestOne();
+                startingDate = latest.getDateTime();
                 Headers headers = response.headers();
                 Log.i("headers: ", "" + headers.toString());
             }
