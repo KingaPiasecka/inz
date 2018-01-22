@@ -100,6 +100,7 @@ public class MainPresenter {
             List<Dust> resultList = apiCallBack.getResultList();
             Collections.sort(resultList);
             updateChart(resultList);
+            Collections.sort(resultList);
             updateMap(resultList);
 
         }
