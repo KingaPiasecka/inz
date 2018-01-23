@@ -28,7 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by piase on 2018-01-04.
@@ -163,11 +162,9 @@ public class MainPresenter {
 
     private void setChartPreferences() {
         if (DataTimePresenter.isDateTimeChange()) {
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             long time = new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()).getTime();
             iAxisValueFormatter = new TimeAxisValueFormatter(time);
         } else {
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             long time = new Date().getTime();
             iAxisValueFormatter = new TimeAxisValueFormatter(time);
 

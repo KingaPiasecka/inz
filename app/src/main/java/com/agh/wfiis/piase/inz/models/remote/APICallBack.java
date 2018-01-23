@@ -1,11 +1,11 @@
 package com.agh.wfiis.piase.inz.models.remote;
 
 import android.content.Context;
-import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
 
 import com.agh.wfiis.piase.inz.DataManager;
 import com.agh.wfiis.piase.inz.models.pojo.Dust;
+import com.agh.wfiis.piase.inz.presenters.DataTimePresenter;
 import com.agh.wfiis.piase.inz.restapi.APIClient;
 import com.agh.wfiis.piase.inz.utils.ToastMessage;
 
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import okhttp3.Headers;
@@ -39,37 +38,53 @@ public class APICallBack implements Callback<List<Dust>> {
     private Context context;
     private boolean exceptionStop = false;
     private DataManager dataManager;
-    private Date startingDate;
+    public Date startingDate;
 
 
     public APICallBack(Context context) {
         this.resultList = new ArrayList<>();
         this.unPause = false;
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        dateFormat.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
+        this.dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         this.context = context;
         this.startingDate = null;
     }
 
     public void start(Date startingDateTime, String devId, DataManager dataManager) {
 
-        if (this.startingDate == null) {
+        Log.i("start DateTime:", startingDateTime.toString());
+
+        if (this.startingDate == null || DataTimePresenter.isDateTimeChange()) {
             this.startingDate = startingDateTime;
+
         }
+
 
         this.dataManager = dataManager;
         APIInterface apiInterface = APIClient.getRetrofit(context).create(APIInterface.class);
         exceptionStop = false;
 
         if (unPause) {
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             this.startingDate = new Date();
             unPause = false;
         }
 
+
+        if (DataTimePresenter.isDateTimeChange()) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            String format = dateFormat.format(startingDateTime);
+            call = apiInterface.getDusts(format, devId);
+            Log.i("Start3 from:" + format, "devId:" + devId);
+        } else {
+            long l = this.startingDate.getTime() + 1000;
+            String format = dateFormat.format(l);
+            call = apiInterface.getDusts(format, devId);
+            Log.i("Start from:" + format, "devId:" + devId);
+        }
+
 //        if (resultList.isEmpty()) {
-            call = apiInterface.getDusts(dateFormat.format(startingDate.getTime()+1000), devId);
-            Log.i("Start from:" + dateFormat.format(startingDate), "devId:" + devId);
+        //Log.i("TIME:", dateFormat.format(this.startingDate.getTime() + 1000));
+
 
        /* } else if (!resultList.isEmpty()) {
             Date dateTime = latest.getDateTime();

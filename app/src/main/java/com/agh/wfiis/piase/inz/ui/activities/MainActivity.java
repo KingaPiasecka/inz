@@ -28,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback{
 
@@ -39,6 +40,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private DialogFragment newFragment;
     private NetworkChangeReceiver networkChangeReceiver;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+    private TimeZone timeZone;
 
 
     @Override
@@ -52,6 +54,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         ToastMessage.setContext(getApplicationContext());
+
+        Calendar calendar = Calendar.getInstance();
+        if (timeZone == null) {
+            timeZone = calendar.getTimeZone();
+        }
+
 
         SharedPreferences sharedPref = getBaseContext().getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -93,6 +101,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         pickerDateTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 showTimePickerDialog(v);
                 showDatePickerDialog(v);
             }
@@ -123,7 +132,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     //start downloading data
                     mainPresenter.sendAsyncRequest();
                     MainPresenter.setEndOfMeasurements(false);
-
 
 
                 } else if (status == 2) {
@@ -161,6 +169,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 mainPresenter.dataManager.deleteDataListCache();
                 mainPresenter.setPAUSE(false);
                 MainPresenter.setEndOfMeasurements(true);
+                TimeZone.setDefault(timeZone);
             }
         });
 

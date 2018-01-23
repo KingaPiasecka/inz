@@ -56,7 +56,8 @@ public class DataManagerImp implements DataManager{
                             }
                             TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
                             if (DataTimePresenter.isDateTimeChange()) {
-                                apiCallBack.start(new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()), MainPresenter.getDeviceId(), DataManagerImp.this);
+                                Date changedDateTime = DataTimePresenter.getStartingDateTime().getTime();
+                                apiCallBack.start(changedDateTime, MainPresenter.getDeviceId(), DataManagerImp.this);
                                 DataTimePresenter.setDateTimeChange(false);
                             } else if (!MainPresenter.isPAUSE()) {
                                 apiCallBack.start(new Date(), MainPresenter.getDeviceId(), DataManagerImp.this);
@@ -84,6 +85,7 @@ public class DataManagerImp implements DataManager{
     public void cancelAsyncRequest() {
         if (doAsynchronousTask != null) {
             Log.i("invoke", "cancelAsyncRequest");
+            apiCallBack.startingDate = null;
             doAsynchronousTask.cancel();
         }
     }
