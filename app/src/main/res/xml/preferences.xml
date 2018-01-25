@@ -40,22 +40,16 @@
 
     <PreferenceCategory
         android:textSize="40dp"
-        android:title="PoDust">
+        android:title="About MoMeMo">
 
         <ListPreference
-            android:dialogMessage="MoMeMo (Mobile Measurement Monitor) v.1.0
-Application developed by Kinga Piasecka
-as diploma project.
-Environmental Physics Group
-Faculty of Physics and Applied Computer Science
-AGH University of Science and Technology
-All rights reserved"
+            android:dialogMessage="Application developed by Kinga Piasecka as diploma project.\n\nEnvironmental Physics Group\nFaculty of Physics and Applied Computer Science\nAGH University of Science and Technology\n\nAll rights reserved"
             android:entries="@array/about"
             android:entryValues="@array/aboutV"
             android:key="about"
             android:negativeButtonText="@null"
             android:positiveButtonText="OK"
-            android:title="About" />
+            android:title="(Mobile Measurement Monitor) v.1.0" />
 
     </PreferenceCategory>
 
