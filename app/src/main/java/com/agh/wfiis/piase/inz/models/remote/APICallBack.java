@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.agh.wfiis.piase.inz.DataManager;
 import com.agh.wfiis.piase.inz.models.pojo.Dust;
-import com.agh.wfiis.piase.inz.presenters.DataTimePresenter;
 import com.agh.wfiis.piase.inz.restapi.APIClient;
 import com.agh.wfiis.piase.inz.utils.ToastMessage;
 
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.SimpleTimeZone;
 
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -34,65 +33,34 @@ public class APICallBack implements Callback<List<Dust>> {
     private List<Dust> resultList;
     private boolean unPause;
     private DateFormat dateFormat;
-    private Dust latest;
+    private Date latest;
     private Context context;
     private boolean exceptionStop = false;
     private DataManager dataManager;
-    public Date startingDate;
 
 
     public APICallBack(Context context) {
         this.resultList = new ArrayList<>();
         this.unPause = false;
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        this.dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+        dateFormat.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         this.context = context;
-        this.startingDate = null;
     }
 
     public void start(Date startingDateTime, String devId, DataManager dataManager) {
-
-        Log.i("start DateTime:", startingDateTime.toString());
-
-        if (this.startingDate == null || DataTimePresenter.isDateTimeChange()) {
-            this.startingDate = startingDateTime;
-
-        }
-
-
         this.dataManager = dataManager;
         APIInterface apiInterface = APIClient.getRetrofit(context).create(APIInterface.class);
         exceptionStop = false;
-
-        if (unPause) {
-            this.startingDate = new Date();
+        if (latest == null || unPause) {
+            latest = startingDateTime;
+            call = apiInterface.getDusts(dateFormat.format(latest.getTime()), devId);
+            Log.i("Start from:" + dateFormat.format(startingDateTime), "devId:" + devId);
             unPause = false;
-        }
-
-
-        if (DataTimePresenter.isDateTimeChange()) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            String format = dateFormat.format(startingDateTime);
-            call = apiInterface.getDusts(format, devId);
-            Log.i("Start3 from:" + format, "devId:" + devId);
         } else {
-            long l = this.startingDate.getTime() + 1000;
-            String format = dateFormat.format(l);
-            call = apiInterface.getDusts(format, devId);
-            Log.i("Start from:" + format, "devId:" + devId);
-        }
-
-//        if (resultList.isEmpty()) {
-        //Log.i("TIME:", dateFormat.format(this.startingDate.getTime() + 1000));
-
-
-       /* } else if (!resultList.isEmpty()) {
-            Date dateTime = latest.getDateTime();
-            dateTime.setTime(dateTime.getTime() + 1000);
-            String date = dateFormat.format(dateTime);
+            String date = dateFormat.format(latest.getTime());
             call = apiInterface.getDusts(date, devId);
             Log.i("Get data from:", date);
-        }*/
+        }
         try {
             call.enqueue(this);
         } catch (Exception e) {
@@ -110,13 +78,11 @@ public class APICallBack implements Callback<List<Dust>> {
         if (response.isSuccessful()) {
             resultList = response.body();
             if (!resultList.isEmpty()) {
-                latest = getTheNewestOne();
-                startingDate = latest.getDateTime();
+                latest = getTheNewestOne().getDateTime();
                 Headers headers = response.headers();
                 Log.i("headers: ", "" + headers.toString());
             }
         } else {
-
             Log.e("Error Code", String.valueOf(response.code()));
             if (response.code() == 401) {
                 dataManager.onSuccess(false, "User not authenticated");
@@ -158,5 +124,9 @@ public class APICallBack implements Callback<List<Dust>> {
 
     public boolean isExceptionStop() {
         return exceptionStop;
+    }
+
+    public void deleteLatest() {
+        this.latest = null;
     }
 }

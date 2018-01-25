@@ -146,21 +146,12 @@ public class MainPresenter {
 
     public void updateChart(List<Dust> dustList) {
         if (!dustList.isEmpty()) {
-/*            List<Dust> dusts =  dataManager.getAllData();
-            LineData chartData = chart.getData();
-
-            if (chartData != null) {
-                List<ILineDataSet> dataSets = chartData.getDataSets();
-
-                for (ILineDataSet set : dataSets) {
-                    chartData.removeDataSet(set);
-                }
-            }*/
             chartInterface.updateChart(dustList);
         }
     }
 
     private void setChartPreferences() {
+
         if (DataTimePresenter.isDateTimeChange()) {
             long time = new Date(DataTimePresenter.getStartingDateTime().getTimeInMillis()).getTime();
             iAxisValueFormatter = new TimeAxisValueFormatter(time);

@@ -136,7 +136,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 } else if (status == 2) {
                     //set button
-                    startPauseButton.setText(R.string.start);
+                    startPauseButton.setText(R.string.resume);
                     v.setTag(3);
 
                     //pause downloading data

@@ -5,6 +5,7 @@
     <string name="start">START</string>
     <string name="pause">PAUSE</string>
     <string name="stop">STOP</string>
+    <string name="resume">RESUME</string>
 
     <string name="pm10">PM10</string>
     <string name="pm25">PM2.5</string>

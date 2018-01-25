@@ -30,6 +30,8 @@ public class DataManagerImp implements DataManager{
     private DatabaseAdapter databaseAdapter;
     private Context context;
 
+    private boolean isProcessOver = true;
+
     public DataManagerImp(MainPresenter mainPresenter, Context context, APICallBack apiCallBack) {
         this.mainPresenter = mainPresenter;
         this.context = context;
@@ -54,20 +56,23 @@ public class DataManagerImp implements DataManager{
                             if (apiCallBack.isExceptionStop()) {
                                 cancelAsyncRequest();
                             }
-                            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-                            if (DataTimePresenter.isDateTimeChange()) {
-                                Date changedDateTime = DataTimePresenter.getStartingDateTime().getTime();
-                                apiCallBack.start(changedDateTime, MainPresenter.getDeviceId(), DataManagerImp.this);
-                                DataTimePresenter.setDateTimeChange(false);
-                            } else if (!MainPresenter.isPAUSE()) {
-                                apiCallBack.start(new Date(), MainPresenter.getDeviceId(), DataManagerImp.this);
-                            }
 
-                            if (!MainPresenter.isPAUSE()) {
-                                List<Dust> resultList = apiCallBack.getResultList();
-                                databaseAdapter.insert(resultList);
+                            if (isProcessOver) {
+                                TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+                                if (DataTimePresenter.isDateTimeChange()) {
+                                    Date changedDateTime = DataTimePresenter.getStartingDateTime().getTime();
+                                    apiCallBack.start(changedDateTime, MainPresenter.getDeviceId(), DataManagerImp.this);
+                                    DataTimePresenter.setDateTimeChange(false);
+                                } else if (!MainPresenter.isPAUSE()) {
+                                    apiCallBack.start(new Date(), MainPresenter.getDeviceId(), DataManagerImp.this);
+                                }
+
+                                if (!MainPresenter.isPAUSE()) {
+                                    List<Dust> resultList = apiCallBack.getResultList();
+                                    databaseAdapter.insert(resultList);
+                                }
+                                mainPresenter.updateUI();
                             }
-                            mainPresenter.updateUI();
 
                         } catch (IllegalArgumentException e) {
                             ToastMessage.showToastMessage(e.getMessage());
@@ -85,7 +90,7 @@ public class DataManagerImp implements DataManager{
     public void cancelAsyncRequest() {
         if (doAsynchronousTask != null) {
             Log.i("invoke", "cancelAsyncRequest");
-            apiCallBack.startingDate = null;
+            apiCallBack.deleteLatest();
             doAsynchronousTask.cancel();
         }
     }
@@ -100,6 +105,10 @@ public class DataManagerImp implements DataManager{
 
     public void deleteDataListCache() {
         apiCallBack.clearDataCache();
+    }
+
+    public void setProcessOver(boolean processOver) {
+        isProcessOver = processOver;
     }
 
     @Override
