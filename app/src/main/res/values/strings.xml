@@ -27,9 +27,9 @@
     <string name="humidity">HUMIDITY</string>
     <string name="pressure">PRESSURE</string>
 
-    <string name="windSpeed">Wind spd</string>
-    <string name="windDir">Wind dir</string>
-    <string name="speed">Speed</string>
+    <string name="windSpeed">CH4</string>
+    <string name="windDir">CO2</string>
+    <string name="speed">delCH4</string>
 
     <string name="title_activity_splash">MoMeMoApp</string>
 
