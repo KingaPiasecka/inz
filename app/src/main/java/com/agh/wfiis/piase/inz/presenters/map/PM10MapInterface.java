@@ -35,7 +35,8 @@ public class PM10MapInterface implements MapInterface {
         LatLng pos = new LatLng(dust.getLatitude(), dust.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(pos)
-                .title("PM10: " + dust.getPm10().toString())
+                //.title("PM10: " + dust.getPm10().toString())
+                .title("CH4: " + dust.getPm10().toString())
                 //.snippet("PM10: " + dust.getPm10().toString())
                 .icon(bitmapDescriptor);
 

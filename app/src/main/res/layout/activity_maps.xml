@@ -3,7 +3,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="2"
+    android:weightSum="3"
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/white"
@@ -17,7 +17,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         tools:context="com.agh.wfiis.piase.inz.ui.activities.MainActivity" />
 
 
@@ -65,7 +65,7 @@
                     android:id="@+id/pm10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pm10"
+                    android:text="@string/ch4"
                     style="?android:attr/borderlessButtonStyle"
                     android:textColor="@color/select_button_color"
                     android:background="@drawable/select_button"/>
@@ -74,7 +74,7 @@
                     android:id="@+id/pm25"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pm25"
+                    android:text="@string/co2"
                     style="?android:attr/borderlessButtonStyle"
                     android:textColor="@color/select_button_color"
                     android:background="@drawable/select_button"/>
@@ -141,7 +141,7 @@
             android:id="@+id/temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/temperature"
+            android:text="@string/windSpeed"
             style="?android:attr/borderlessButtonStyle"
             android:textColor="@color/select_button_color"
             android:background="@drawable/select_button"/>
@@ -150,7 +150,7 @@
             android:id="@+id/humidity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/humidity"
+            android:text="@string/windDir"
             style="?android:attr/borderlessButtonStyle"
             android:textColor="@color/select_button_color"
             android:background="@drawable/select_button"/>
@@ -159,7 +159,7 @@
             android:id="@+id/pressure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pressure"
+            android:text="@string/speed"
             style="?android:attr/borderlessButtonStyle"
             android:textColor="@color/select_button_color"
             android:background="@drawable/select_button"/>

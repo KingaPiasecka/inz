@@ -35,7 +35,8 @@ public class PM25MapInterface implements MapInterface {
         LatLng pos = new LatLng(dust.getLatitude(), dust.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(pos)
-                .title("PM2.5: " + dust.getPm25().toString())
+                //.title("PM2.5: " + dust.getPm25().toString())
+                .title("CO2: " + dust.getPm25().toString())
                 //.snippet("PM2.5: " + dust.getPm25().toString())
                 .icon(bitmapDescriptor);
 

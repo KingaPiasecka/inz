@@ -71,7 +71,7 @@ public class PreChartInterface implements ChartInterface{
                 long l = dust.getDateTime().getTime() - iAxisValueFormatter.referenceTimestamp;
                 Log.i("updateChart: ", dust.toString());
                 tempList.add(new Entry(l, dust.getpAtm().floatValue()));
-                chart.getDescription().setText("Pressure: " + dust.getpAtm() + " (hPa)");
+                //chart.getDescription().setText("Pressure: " + dust.getpAtm() + " (hPa)");
             }
 
             Collections.sort(tempList, new EntryXComparator());

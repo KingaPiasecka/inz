@@ -71,7 +71,7 @@ public class HumChartInterface implements ChartInterface {
                 long l = dust.getDateTime().getTime() - iAxisValueFormatter.referenceTimestamp;
                 Log.i("updateChart: ", dust.toString());
                 tempList.add(new Entry(l, dust.getrHum().floatValue()));
-                chart.getDescription().setText("Humidity: " + dust.getrHum() + " (%)");
+                //chart.getDescription().setText("Humidity: " + dust.getrHum() + " (%)");
             }
 
             Collections.sort(tempList, new EntryXComparator());

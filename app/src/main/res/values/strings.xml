@@ -10,6 +10,10 @@
     <string name="pm10">PM10</string>
     <string name="pm25">PM2.5</string>
     <string name="pm1">PM1.0</string>
+    
+    <string name="ch4">CH4</string>
+    <string name="co2">CO2</string>
+
 
     <string-array name="deviceID">
         <item>11</item>
@@ -23,18 +27,24 @@
     <string name="humidity">HUMIDITY</string>
     <string name="pressure">PRESSURE</string>
 
+    <string name="windSpeed">Wind spd</string>
+    <string name="windDir">Wind dir</string>
+    <string name="speed">Speed</string>
+
     <string name="title_activity_splash">MoMeMoApp</string>
 
     <string-array name="deviceId">
         <item>11</item>
         <item>12</item>
         <item>13</item>
+        <item>14</item>
     </string-array>
 
     <string-array name="deviceIdValues">
         <item>11</item>
         <item>12</item>
         <item>13</item>
+        <item>14</item>
     </string-array>
 
     <string-array name="about">

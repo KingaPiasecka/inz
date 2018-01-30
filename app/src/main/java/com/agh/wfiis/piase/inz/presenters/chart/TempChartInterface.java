@@ -76,7 +76,7 @@ public class TempChartInterface implements ChartInterface {
                 long l = dust.getDateTime().getTime() - iAxisValueFormatter.referenceTimestamp;
                 Log.i("updateChart: ", dust.toString());
                 tempList.add(new Entry(l, dust.getTemperature().floatValue()));
-                chart.getDescription().setText("Temperature: " + dust.getTemperature() + " (C)");
+                //chart.getDescription().setText("Temperature: " + dust.getTemperature() + " (C)");
 
             }
 
